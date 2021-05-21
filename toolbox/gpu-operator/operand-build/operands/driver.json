@@ -1,0 +1,25 @@
+{
+  "build_operand_git_repo": "https://gitlab.com/nvidia/container-images/driver.git",
+  "build_operand_git_ref": "master",
+  "build_operand_namespace": "gpu-operator-resources",
+  "build_operand_imagestream_name": "driver",
+  "build_operand_tag": "latest-rhcos4.7",
+  "build_operand_dockerfile": "Dockerfile",
+  "build_operand_docker_context": "./rhel8",
+  "build_operand_docker_build_args": [
+    {
+      "name": "DRIVER_ARCH",
+      "value": "x86_64"
+    },
+    {
+      "name": "DRIVER_VERSION",
+      "value": "460.73.01"
+    }
+  ],
+  "build_operand_extra_docker_strategy": {
+    "from": {
+      "kind": "DockerImage",
+      "name": "nvcr.io/nvidia/cuda:11.3.0-base-ubi8"
+    }
+  }
+}

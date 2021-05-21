@@ -1,0 +1,4 @@
+---
+build_operand_image_builder: roles/build-operand/files/image_builder.yml
+build_operand_namespace_deployment: roles/build-operand/files/namespace.yml
+build_operand_imagestream: roles/build-operand/files/imagestream.yml

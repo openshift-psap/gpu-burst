@@ -1,0 +1,52 @@
+---
+- name: Make sure imagestream name is set
+  when: not build_operand_imagestream_name
+  fail: msg="Failed because build_operand_imagestream_name has to be set"
+
+- name: Apply the namespace manifest
+  shell:
+    set -o pipefail;
+    cat "{{ build_operand_namespace_deployment }}" \
+    | sed 's|{{ '{{' }} build_operand_namespace {{ '}}' }}|{{ build_operand_namespace }}|' \
+    | oc apply -f-
+
+- name: Apply the imagestream manifest
+  shell:
+    set -o pipefail;
+    cat "{{ build_operand_imagestream }}" \
+    | sed 's|{{ '{{' }} build_operand_namespace {{ '}}' }}|{{ build_operand_namespace }}|' \
+    | sed 's|{{ '{{' }} build_operand_imagestream_name {{ '}}' }}|{{ build_operand_imagestream_name }}|' \
+    | oc apply -f-
+
+- name: Search if the CI image exists
+  command: oc get imagestreamtag -n "{{ build_operand_namespace }}" "{{ build_operand_imagestream_name }}:{{ build_operand_tag }}" -oname --ignore-not-found
+  register: has_ci_image
+
+- name: Build the CI image
+  when: has_ci_image.stdout == ""
+  block:
+  - name: Delete any old image builder manifest
+    command: oc delete -n "{{ build_operand_namespace }}" buildconfig/{{ build_operand_imagestream_name }} --ignore-not-found
+
+  - name: Apply the CI artifacts image builder manifest
+    shell:
+      set -o pipefail;
+      cat "{{ build_operand_image_builder }}" \
+       | sed 's|{{ '{{' }} build_operand_namespace {{ '}}' }}|{{ build_operand_namespace }}|' \
+       | sed 's|{{ '{{' }} build_operand_git_repo {{ '}}' }}|{{ build_operand_git_repo }}|' \
+       | sed 's|{{ '{{' }} build_operand_git_ref {{ '}}' }}|{{ build_operand_git_ref }}|' \
+       | sed 's|{{ '{{' }} build_operand_imagestream_name {{ '}}' }}|{{ build_operand_imagestream_name }}|' \
+       | sed 's|{{ '{{' }} build_operand_tag {{ '}}' }}|{{ build_operand_tag }}|' \
+       | sed 's|{{ '{{' }} build_operand_dockerfile {{ '}}' }}|{{ build_operand_dockerfile }}|' \
+       | sed 's|{{ '{{' }} build_operand_docker_context {{ '}}' }}|{{ build_operand_docker_context }}|' \
+       | sed 's|{{ '{{' }} build_operand_docker_build_args {{ '}}' }}|{{ build_operand_docker_build_args | to_json }}|' \
+       | sed 's|{{ '{{' }} build_operand_extra_docker_strategy {{ '}}' }}|{{ build_operand_extra_docker_strategy | to_yaml | trim }}|' \
+       | oc apply -f-
+    args:
+      warn: false # don't warn about using sed here
+
+  - name: Wait for the image to be built
+    shell: oc logs -f "buildconfig/{{ build_operand_imagestream_name }}" -n "{{ build_operand_namespace }}" > /dev/null
+
+- name: Ensure that the image exists
+  command: oc get imagestreamtag -n "{{ build_operand_namespace }}" "{{ build_operand_imagestream_name }}:{{ build_operand_tag }}" -oname --ignore-not-found

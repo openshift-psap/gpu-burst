@@ -1,0 +1,23 @@
+{
+  "build_operand_git_repo": "https://gitlab.com/nvidia/container-toolkit/gpu-monitoring-tools",
+  "build_operand_git_ref": "master",
+  "build_operand_namespace": "gpu-operator-resources",
+  "build_operand_imagestream_name": "dcgm-exporter",
+  "build_operand_tag": "latest",
+  "build_operand_dockerfile": "docker/Dockerfile.ubi8",
+  "build_operand_docker_context": ".",
+  "build_operand_docker_build_args": [
+    {
+      "name": "GOLANG_VERSION",
+      "value": "1.14.2"
+    },
+    {
+      "name": "DCGM_VERSION",
+      "value": "2.1.8"
+    },
+    {
+      "name": "VERSION",
+      "value": "2.4.0-rc.2"
+    }
+  ]
+}

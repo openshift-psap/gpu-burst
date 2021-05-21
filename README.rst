@@ -136,13 +136,25 @@ The functionalities of the toolbox commands are described in the
     ├── gpu-operator
     │   ├── capture_deployment_state.sh
     │   ├── cleanup_resources.sh
+    │   ├── custom_operands.json
     │   ├── deploy_from_commit.sh
     │   ├── deploy_from_helm.sh
+    │   ├── deploy_from_operatorhub_custom_operands.sh
     │   ├── deploy_from_operatorhub.sh
     │   ├── diagnose.sh
     │   ├── list_version_from_helm.sh
     │   ├── list_version_from_operator_hub.sh
     │   ├── must-gather.sh
+    │   ├── operand-build
+    │   │   ├── build_all.sh
+    │   │   ├── clean_all.sh
+    │   │   └── operands
+    │   │       ├── dcgm_exporter.json
+    │   │       ├── device_plugin.json
+    │   │       ├── driver.json
+    │   │       ├── gfd.json
+    │   │       ├── toolkit.json
+    │   │       └── validator.json
     │   ├── run_gpu_burn.sh
     │   ├── set_repo-config.sh
     │   ├── undeploy_from_commit.sh
