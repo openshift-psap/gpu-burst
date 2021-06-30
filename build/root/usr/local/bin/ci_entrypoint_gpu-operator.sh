@@ -4,6 +4,12 @@ set -o pipefail
 set -o errexit
 set -o nounset
 
+build_all_operands() {
+    trap collect_must_gather ERR
+
+    toolbox/gpu-operator/operand-build/build_all.sh
+}
+
 prepare_cluster_for_gpu_operator() {
     trap collect_must_gather ERR
 
@@ -53,6 +59,14 @@ validate_gpu_operator_deployment() {
 test_master_branch() {
     prepare_cluster_for_gpu_operator
     toolbox/gpu-operator/deploy_from_operatorhub.sh --from-bundle=master
+
+    validate_gpu_operator_deployment
+}
+
+test_master_branch_self_built_operands() {
+    prepare_cluster_for_gpu_operator
+    build_all_operands
+    toolbox/gpu-operator/deploy_from_operatorhub_custom_operands.sh --from-bundle=master
 
     validate_gpu_operator_deployment
 }
@@ -109,8 +123,16 @@ shift
 set -x
 
 case ${action:-} in
+    "build_all_operands")
+        build_all_operands "$@"
+        exit 0
+        ;;
     "test_master_branch")
         test_master_branch "$@"
+        exit 0
+        ;;
+    "test_master_branch_self_built_operands")
+        test_master_branch_self_built_operands "$@"
         exit 0
         ;;
     "test_commit")

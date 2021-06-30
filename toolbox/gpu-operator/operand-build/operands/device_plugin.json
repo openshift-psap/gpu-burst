@@ -1,0 +1,19 @@
+{
+  "build_operand_git_repo": "https://gitlab.com/nvidia/kubernetes/device-plugin.git",
+  "build_operand_git_ref": "master",
+  "build_operand_namespace": "gpu-operator-resources",
+  "build_operand_imagestream_name": "k8s-device-plugin",
+  "build_operand_tag": "latest",
+  "build_operand_dockerfile": "docker/Dockerfile.ubi8",
+  "build_operand_docker_context": ".",
+  "build_operand_docker_build_args": [
+    {
+      "name": "GOLANG_VERSION",
+      "value": "1.15.8"
+    },
+    {
+      "name": "PLUGIN_VERSION",
+      "value": "0.9.0"
+    }
+  ]
+}

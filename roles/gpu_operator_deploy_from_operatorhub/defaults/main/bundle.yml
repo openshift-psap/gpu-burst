@@ -2,3 +2,11 @@ deploy_bundle_package_name: gpu-operator-certified
 deploy_bundle_namespace: openshift-operators
 deploy_bundle_image: quay.io/openshift-psap/ci-artifacts:gpu-operator_bundle_latest
 deploy_bundle_operator_image: quay.io/openshift-psap/ci-artifacts:gpu-operator_operator_latest
+
+# An optional role that will be ran after the clusterpolicy example is extracted from the CSV's 'alm-examples',
+# but before that clusterpolicy is deployed. This role can be used to patch that clusterpolicy.
+#
+# File locations -
+#    Input cluster policy placed in: "{{ artifact_extra_logs_dir }}"/gpu_operator_clusterpolicy.json
+#    Output cluster policy expected in: "{{ artifact_extra_logs_dir }}"/gpu_operator_clusterpolicy_patched.json
+patch_clusterpolicy_role: ""

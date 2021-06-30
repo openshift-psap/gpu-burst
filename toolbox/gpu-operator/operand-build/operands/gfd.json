@@ -1,0 +1,15 @@
+{
+  "build_operand_git_repo": "https://gitlab.com/nvidia/kubernetes/gpu-feature-discovery.git",
+  "build_operand_git_ref": "master",
+  "build_operand_namespace": "gpu-operator-resources",
+  "build_operand_imagestream_name": "gpu-feature-discovery",
+  "build_operand_tag": "latest",
+  "build_operand_dockerfile": "Dockerfile",
+  "build_operand_docker_context": ".",
+  "build_operand_docker_build_args": [
+    {
+      "name": "GFD_VERSION",
+      "value": "v0.4.1-2-g77e0d08"
+    }
+  ]
+}
